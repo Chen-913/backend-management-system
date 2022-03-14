@@ -9,35 +9,35 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">个人博客后台管理系统</h3>
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="loginId">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          ref="username"
-          v-model="loginForm.username"
-          placeholder="Username"
-          name="username"
+          ref="loginId"
+          v-model="loginForm.loginId"
+          placeholder="请输入账号"
+          name="loginId"
           type="text"
           tabindex="1"
           auto-complete="on"
         />
       </el-form-item>
 
-      <el-form-item prop="password">
+      <el-form-item prop="loginPwd">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
         <el-input
           :key="passwordType"
-          ref="password"
-          v-model="loginForm.password"
+          ref="loginPwd"
+          v-model="loginForm.loginPwd"
           :type="passwordType"
-          placeholder="Password"
-          name="password"
+          placeholder="请输入密码"
+          name="loginPwd"
           tabindex="2"
           auto-complete="on"
           @keyup.enter.native="handleLogin"
@@ -49,57 +49,86 @@
         </span>
       </el-form-item>
 
+      <div class="captcha-container">
+        <el-form-item prop="captcha">
+          <span class="svg-container">
+            <svg-icon icon-class="user" />
+          </span>
+          <el-input
+            ref="captcha"
+            v-model="loginForm.captcha"
+            placeholder="请输入验证码"
+            name="captcha"
+            type="text"
+            tabindex="3"
+            @keyup.enter.native="handleLogin"
+          />
+        </el-form-item>
+
+        <div class="captcha-img" @click="handleClickCaptcha" v-html="captchaSvg" />
+      </div>
+
+      <el-checkbox v-model="checked">7日内免登录</el-checkbox>
+
       <el-button
         :loading="loading"
         type="primary"
-        style="width: 100%; margin-bottom: 30px"
+        style="width: 100%; margin-bottom: 30px;margin-top: 10px;"
         @click.native.prevent="handleLogin"
-      >Login</el-button>
-
-      <div class="tips">
-        <span style="margin-right: 20px">username: admin</span>
-        <span> password: any</span>
-      </div>
+      >登录</el-button>
     </el-form>
   </div>
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate';
+import { validUsername, validPassword, validCaptcha } from '@/utils/validate';
+import { getCaptcha } from '@/api/captcha';
 
 export default {
   name: 'Login',
   data() {
+    // 给username自定义验证规则
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'));
+        callback(new Error('账号由3-15位数字、字母或下划线组成'));
       } else {
         callback();
       }
     };
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'));
+      if (!validPassword(value)) {
+        callback(new Error('密码由6-15位数字、字母或下划线组成'));
+      } else {
+        callback();
+      }
+    };
+    const validateCaptcha = (rule, value, callback) => {
+      if (!validCaptcha(value)) {
+        callback(new Error('验证码由4位数字或字母组成'));
       } else {
         callback();
       }
     };
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        loginId: '',
+        loginPwd: '',
+        captcha: ''
       },
       loginRules: {
-        username: [
+        loginId: [
           { required: true, trigger: 'blur', validator: validateUsername }
         ],
-        password: [
+        loginPwd: [
           { required: true, trigger: 'blur', validator: validatePassword }
-        ]
+        ],
+        captcha: [{ require: true, trigger: 'blur', validator: validateCaptcha }]
       },
       loading: false,
       passwordType: 'password',
-      redirect: undefined
+      redirect: undefined,
+      checked: true,
+      captchaSvg: ''
     };
   },
   watch: {
@@ -110,36 +139,68 @@ export default {
       immediate: true
     }
   },
+  created() {
+    this.handleClickCaptcha();
+  },
   methods: {
     showPwd() {
+      // 切换 passwordType 的值
       if (this.passwordType === 'password') {
-        this.passwordType = '';
+        this.passwordType = 'text';
       } else {
         this.passwordType = 'password';
       }
+      // 自动聚焦密码输入框
       this.$nextTick(() => {
-        this.$refs.password.focus();
+        this.$refs.loginPwd.focus();
       });
     },
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;
+          if (this.checked) {
+            // 是否7日内免登录
+            this.loginForm.remember = 7;
+          }
           this.$store
             .dispatch('user/login', this.loginForm)
             .then(() => {
               this.$router.push({ path: this.redirect || '/' });
               this.loading = false;
             })
-            .catch(() => {
-              console.log('验证失败');
+            .catch((err) => {
+              if (err == null) {
+                this.$message.error('账号密码错误');
+                // 自动聚焦到账号输入框
+                this.$nextTick(() => {
+                  this.$refs.loginId.focus();
+                });
+              } else {
+                this.$message.error('验证码错误');
+                // 自动聚焦到验证码输入框
+                this.$nextTick(() => {
+                  this.$refs.captcha.focus();
+                });
+              }
+              // 清空验证码
+              this.loginForm.captcha = '';
+              // 重新获取验证码
+              this.handleClickCaptcha();
               this.loading = false;
             });
         } else {
-          console.log('error submit!!');
+          this.$message({
+            message: '部分验证不符合要求',
+            type: 'warning'
+          });
           return false;
         }
       });
+    },
+    handleClickCaptcha() {
+      // 将获取到的 svg 图片直接插入到页面中
+      getCaptcha().then(r => { this.captchaSvg = r });
     }
   }
 };
@@ -212,18 +273,22 @@ $light_gray: #eee;
     overflow: hidden;
   }
 
-  .tips {
-    font-size: 14px;
-    color: #fff;
-    margin-bottom: 10px;
-
-    span {
-      &:first-of-type {
-        margin-right: 16px;
-      }
-    }
-  }
-
+.captcha-container{
+	display: flex;
+	.el-form-item{
+		width:70%;
+	}
+	.captcha-img{
+		width:30%;
+		background-color: rgb(0, 0, 0);
+		margin-bottom:22px;
+		border-radius: 0 5px 5px 0;
+		cursor:pointer;
+		:first-child{
+			width: 100%;
+		}
+	}
+}
   .svg-container {
     padding: 6px 5px 6px 15px;
     color: $dark_gray;

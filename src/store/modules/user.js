@@ -1,12 +1,10 @@
 import { login, logout, getInfo } from '@/api/user';
-import { getToken, setToken, removeToken } from '@/utils/auth';
+import { removeToken } from '@/utils/auth';
 import { resetRouter } from '@/router';
 
 const getDefaultState = () => {
   return {
-    token: getToken(),
-    name: '',
-    avatar: ''
+    userInfo: () => ({})
   };
 };
 
@@ -24,20 +22,28 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar;
+  },
+  SET_USER_INFO: (state, userInfo) => {
+    state.userInfo = userInfo;
   }
 };
 
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { username, password } = userInfo;
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password })
-        .then((response) => {
-          const { data } = response;
-          commit('SET_TOKEN', data.token);
-          setToken(data.token);
-          resolve();
+      login(userInfo)
+        .then((res) => {
+          // res是对象且res.data为null则是账号密码错误，是字符串的话则是验证码错误
+          if (typeof res === 'string') {
+            reject(res);
+          } else if (res.data == null) {
+            reject(res.data);
+          } else {
+            // 验证成功
+            commit('SET_USER_INFO', res.data);
+            resolve();
+          }
         })
         .catch((error) => {
           reject(error);
