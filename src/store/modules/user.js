@@ -1,10 +1,10 @@
-import { login, logout, getInfo } from '@/api/user';
+import { login, logout, whoAmI } from '@/api/user';
 import { removeToken } from '@/utils/auth';
 import { resetRouter } from '@/router';
 
 const getDefaultState = () => {
   return {
-    userInfo: () => ({})
+    userInfo: null
   };
 };
 
@@ -52,21 +52,21 @@ const actions = {
   },
 
   // get user info
-  getInfo({ commit, state }) {
+  restoreStatus({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token)
-        .then((response) => {
-          const { data } = response;
-
-          if (!data) {
-            return reject('Verification failed, please Login again.');
+      whoAmI()
+        .then((res) => {
+          // 如果res是一个字符串，那么说明未登录或者登录过期
+          if (typeof res === 'string') {
+            res = JSON.parse(res);
+            if (res.code === 401) {
+              reject(res.msg);
+            }
+          } else {
+            // 如果res是一个对象，那么就说明验证成功
+            commit('SET_USER_INFO', res.data);
+            resolve();
           }
-
-          const { name, avatar } = data;
-
-          commit('SET_NAME', name);
-          commit('SET_AVATAR', avatar);
-          resolve(data);
         })
         .catch((error) => {
           reject(error);

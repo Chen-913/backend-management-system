@@ -33,14 +33,22 @@ import Layout from '@/layout';
 export const constantRoutes = [
   {
     path: '/login',
+    name: 'Login',
     component: () => import('@/views/login/index'),
-    hidden: true
+    hidden: true,
+    meta: {
+      auth: false
+    }
   },
 
   {
     path: '/404',
+    name: '404',
     component: () => import('@/views/404'),
-    hidden: true
+    hidden: true,
+    meta: {
+      auth: false
+    }
   },
 
   // 控制台
@@ -48,12 +56,14 @@ export const constantRoutes = [
     path: '/',
     component: Layout,
     redirect: '/console',
-    children: [{
-      path: 'console',
-      name: 'Console',
-      component: () => import('@/views/console/index'),
-      meta: { title: '控制台', icon: 'dashboard' }
-    }]
+    children: [
+      {
+        path: 'console',
+        name: 'Console',
+        component: () => import('@/views/console/index'),
+        meta: { title: '控制台', icon: 'dashboard', auth: true }
+      }
+    ]
   },
   // 首页标语
   {
@@ -64,7 +74,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'Banner',
         component: () => import('@/views/banner/index'),
-        meta: { title: '首页标语', icon: 'el-icon-s-home' }
+        meta: { title: '首页标语', icon: 'el-icon-s-home', auth: true }
       }
     ]
   },
@@ -80,19 +90,19 @@ export const constantRoutes = [
         path: 'article-list',
         name: 'ArticleList',
         component: () => import('@/views/article/articleList/index'),
-        meta: { title: '文章列表', icon: 'el-icon-s-order' }
+        meta: { title: '文章列表', icon: 'el-icon-s-order', auth: true }
       },
       {
         path: 'article-category',
         name: 'ArticleCategory',
         component: () => import('@/views/article/articleCategory/index'),
-        meta: { title: '文章分类', icon: 'el-icon-menu' }
+        meta: { title: '文章分类', icon: 'el-icon-menu', auth: true }
       },
       {
         path: 'add-article',
         name: 'AddArticle',
         component: () => import('@/views/article/addArticle/index'),
-        meta: { title: '添加文章', icon: 'el-icon-circle-plus' }
+        meta: { title: '添加文章', icon: 'el-icon-circle-plus', auth: true }
       }
     ]
   },
@@ -102,19 +112,19 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/project/project-list',
     name: 'Project',
-    meta: { title: '项目管理', icon: 'el-icon-folder-opened' },
+    meta: { title: '项目管理', icon: 'el-icon-folder-opened', auth: true },
     children: [
       {
         path: 'project-list',
         name: 'ProjectList',
         component: () => import('@/views/project/projectList/index'),
-        meta: { title: '项目列表', icon: 'el-icon-notebook-1' }
+        meta: { title: '项目列表', icon: 'el-icon-notebook-1', auth: true }
       },
       {
         path: 'add-project',
         name: 'AddProject',
         component: () => import('@/views/project/addProject/index'),
-        meta: { title: '添加项目', icon: 'el-icon-circle-plus-outline' }
+        meta: { title: '添加项目', icon: 'el-icon-circle-plus-outline', auth: true }
       }
     ]
   },
@@ -127,7 +137,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'Comment',
         component: () => import('@/views/comment/index'),
-        meta: { title: '评论管理', icon: 'el-icon-chat-dot-square' }
+        meta: { title: '评论管理', icon: 'el-icon-chat-dot-square', auth: true }
       }
     ]
   },
@@ -140,7 +150,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'Message',
         component: () => import('@/views/message/index'),
-        meta: { title: '留言板', icon: 'el-icon-receiving' }
+        meta: { title: '留言板', icon: 'el-icon-receiving', auth: true }
       }
     ]
   },
@@ -153,7 +163,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'About',
         component: () => import('@/views/about/index'),
-        meta: { title: '关于我', icon: 'el-icon-user-solid' }
+        meta: { title: '关于我', icon: 'el-icon-user-solid', auth: true }
       }
     ]
   },
@@ -166,90 +176,20 @@ export const constantRoutes = [
         path: 'index',
         name: 'Setting',
         component: () => import('@/views/setting/index'),
-        meta: { title: '设置', icon: 'el-icon-s-tools' }
+        meta: { title: '设置', icon: 'el-icon-s-tools', auth: true }
       }
     ]
   },
-
-  // {
-  //   path: '/nested',
-  //   component: Layout,
-  //   redirect: '/nested/menu1',
-  //   name: 'Nested',
-  //   meta: {
-  //     title: 'Nested',
-  //     icon: 'nested'
-  //   },
-  //   children: [
-  //     {
-  //       path: 'menu1',
-  //       component: () => import('@/views/nested/menu1/index'), // Parent router-view
-  //       name: 'Menu1',
-  //       meta: { title: 'Menu1' },
-  //       children: [
-  //         {
-  //           path: 'menu1-1',
-  //           component: () => import('@/views/nested/menu1/menu1-1'),
-  //           name: 'Menu1-1',
-  //           meta: { title: 'Menu1-1' }
-  //         },
-  //         {
-  //           path: 'menu1-2',
-  //           component: () => import('@/views/nested/menu1/menu1-2'),
-  //           name: 'Menu1-2',
-  //           meta: { title: 'Menu1-2' },
-  //           children: [
-  //             {
-  //               path: 'menu1-2-1',
-  //               component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-  //               name: 'Menu1-2-1',
-  //               meta: { title: 'Menu1-2-1' }
-  //             },
-  //             {
-  //               path: 'menu1-2-2',
-  //               component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-  //               name: 'Menu1-2-2',
-  //               meta: { title: 'Menu1-2-2' }
-  //             }
-  //           ]
-  //         },
-  //         {
-  //           path: 'menu1-3',
-  //           component: () => import('@/views/nested/menu1/menu1-3'),
-  //           name: 'Menu1-3',
-  //           meta: { title: 'Menu1-3' }
-  //         }
-  //       ]
-  //     },
-  //     {
-  //       path: 'menu2',
-  //       component: () => import('@/views/nested/menu2/index'),
-  //       name: 'Menu2',
-  //       meta: { title: 'menu2' }
-  //     }
-  //   ]
-  // },
-
-  // {
-  //   path: 'external-link',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-  //       meta: { title: 'External Link', icon: 'link' }
-  //     }
-  //   ]
-  // },
-
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  { path: '*', redirect: { name: '404' }, hidden: true }
 ];
 
-const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
-});
+const createRouter = () =>
+  new Router({
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
+  });
 
 const router = createRouter();
 

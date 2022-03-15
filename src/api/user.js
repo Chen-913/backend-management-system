@@ -9,11 +9,14 @@ export function login(data) {
   });
 }
 
-export function getInfo(token) {
+/**
+ * 验证token的有效性
+ * @returns
+ */
+export function whoAmI() {
   return request({
-    url: '/vue-admin-template/user/info',
-    method: 'get',
-    params: { token }
+    url: '/api/admin/whoami',
+    method: 'get'
   });
 }
 
