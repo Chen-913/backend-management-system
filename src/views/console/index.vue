@@ -1,5 +1,7 @@
 <template>
-  <h1>这是控制台页面</h1>
+  <div class="app-container">
+    <h1>这是控制台页面,本应该有很多echarts图表</h1>
+  </div>
 </template>
 
 <script>
