@@ -29,30 +29,26 @@ router.beforeEach(async (to, from, next) => {
       const token = getToken();
       if (token) {
         // 如果有token，则需要验证token的正确性，恢复登录状态
-        await store.dispatch('user/restoreStatus').then(() => {
+        store.dispatch('user/restoreStatus').then(() => {
           // token没有问题，则进入
           next();
         }).catch((err) => {
-          // token有问题，则通知错误消息，清除token，重新跳转至登录页
+          // token 有问题，则通知错误消息，清除 token，重新跳转至登录页
           Message.error(err);
           removeToken();
           next({ name: 'Login' });
         });
       } else {
-        // m没有token，直接跳转到登录页
-        next({ name: 'Login' });
+        // 没有token，直接跳转到登录页，并记录上一个路由
+        next('/login?redirect=' + to.path);
       }
       NProgress.done();
     }
   } else {
     // 不需要鉴权，看是否为登录页
-    if (to.name === 'Login') {
-      // 如果是登录页，则先判断是否已经登录，如果已经登录了，则跳转至控制台
-      if (hasUserInfo) {
-        next({ name: 'Console' });
-      } else {
-        next();
-      }
+    if (to.name === 'Login' && hasUserInfo) {
+      // 如果是登录页，且已经登录，如果已经登录了，则跳转至控制台
+      next({ name: 'Console' });
     } else {
       // 如果不是登录页，直接放行
       next();

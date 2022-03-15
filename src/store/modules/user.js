@@ -51,7 +51,7 @@ const actions = {
     });
   },
 
-  // get user info
+  // restoreStatus
   restoreStatus({ commit, state }) {
     return new Promise((resolve, reject) => {
       whoAmI()
@@ -88,16 +88,16 @@ const actions = {
           reject(error);
         });
     });
-  },
+  }
 
   // remove token
-  resetToken({ commit }) {
-    return new Promise((resolve) => {
-      removeToken(); // must remove  token  first
-      commit('RESET_STATE');
-      resolve();
-    });
-  }
+  // resetToken({ commit }) {
+  //   return new Promise((resolve) => {
+  //     removeToken(); // must remove  token  first
+  //     commit('RESET_STATE');
+  //     resolve();
+  //   });
+  // }
 };
 
 export default {
