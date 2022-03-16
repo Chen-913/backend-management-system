@@ -61,6 +61,7 @@
             name="captcha"
             type="text"
             tabindex="3"
+            maxlength="4"
             @keyup.enter.native="handleLogin"
           />
         </el-form-item>
