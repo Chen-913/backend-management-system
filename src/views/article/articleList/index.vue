@@ -5,7 +5,7 @@
     <el-table v-loading="loading" border :data="blogList" style="width: 100%">
       <el-table-column label="序号" width="70" align="center">
         <template slot-scope="scope">
-          {{ scope.$index+1 }}
+          {{ scope.$index + (pagination.currentPage - 1) * pagination.pageSize + 1 }}
         </template>
       </el-table-column>
       <el-table-column prop="title" label="文章名称" min-width="160" align="center">
