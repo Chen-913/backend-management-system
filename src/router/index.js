@@ -103,6 +103,13 @@ export const constantRoutes = [
         name: 'AddArticle',
         component: () => import('@/views/article/addArticle/index'),
         meta: { title: '添加文章', icon: 'el-icon-circle-plus', auth: true }
+      },
+      {
+        path: 'edit-category',
+        name: 'EditCategory',
+        hidden: true,
+        component: () => import('@/views/article/editArticle/index'),
+        meta: { title: '编辑文章', icon: 'el-icon-menu', auth: true }
       }
     ]
   },
