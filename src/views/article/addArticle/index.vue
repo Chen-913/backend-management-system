@@ -42,14 +42,14 @@ import { Editor } from '@toast-ui/vue-editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
 // 在设置中文之前需要引入中文语言包
 import '@toast-ui/editor/dist/esm/i18n/zh-cn';
-// 黑暗模式需要的css文件
-// import '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
+import 'tui-color-picker/dist/tui-color-picker.css';
+import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
+import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 // 代码高亮所需的css文件
 import 'prismjs/themes/prism.css';
 import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
 // toast-ui编辑器代码高亮插件
-import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
-import Prism from 'prismjs';
+import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight-all.js';
 import Upload from '@/components/Upload';
 import { getBlogCategory } from '@/api/blogCategory';
 import { addBlog } from '@/api/blog.js';
@@ -74,11 +74,9 @@ export default {
         language: 'zh-CN',
         usageStatistics: false,
         hideModeSwitch: false,
-        // 设置黑暗主题
-        // theme: 'dark',
         placeholder: '在此输入文章内容',
         // 语法高亮插件
-        plugins: [[codeSyntaxHighlight, { highlighter: Prism }]]
+        plugins: [codeSyntaxHighlight, colorSyntax]
       },
       // 博客分类数据
       blogCategory: []
@@ -123,5 +121,4 @@ export default {
 </script>
 
 <style>
-
 </style>
