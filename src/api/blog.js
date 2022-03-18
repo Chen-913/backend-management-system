@@ -44,3 +44,29 @@ export function addBlog(blogInfo) {
     data: blogInfo
   });
 }
+
+/**
+ * 根据传入的文章 id，修改文章内容
+ * @param {String} blogId 文章id
+ * @param {Object} blogInfo 文章相关信息
+ * @returns
+ */
+export function modifyBlog(blogId, blogInfo) {
+  return request({
+    url: `/api/blog/${blogId}`,
+    method: 'put',
+    data: blogInfo
+  });
+}
+
+/**
+ * 根据文章id获取文章的相关信息
+ * @param {String} blogId 文章id
+ * @returns
+ */
+export function getBlog(blogId) {
+  return request({
+    url: `/api/blog/${blogId}`,
+    method: 'get'
+  });
+}

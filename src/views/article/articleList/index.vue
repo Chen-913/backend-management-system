@@ -32,7 +32,7 @@
       <el-table-column prop="description" label="操作" align="center" min-width="130">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
-            <el-button type="primary" icon="el-icon-edit" circle @click="handleEdit(scope)" />
+            <el-button type="primary" icon="el-icon-edit" circle @click="handleEdit(scope.row)" />
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
             <el-button type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)" />
@@ -148,6 +148,15 @@ export default {
       // 每页显示条数发生变化时触发
       this.pagination.pageSize = pageSize;
       this.fetchData();
+    },
+    handleEdit(articleInfo) {
+      // 跳转至编辑文章页面。并将文章的 id 传递过去
+      this.$router.push({
+        name: 'EditArticle',
+        params: {
+          id: articleInfo.id
+        }
+      });
     }
   }
 };
