@@ -31,3 +31,16 @@ export function deleteBlog(id) {
     method: 'delete'
   });
 }
+
+/**
+ * 发布文章
+ * @param {Object} blogInfo 文章信息
+ * @returns
+ */
+export function addBlog(blogInfo) {
+  return request({
+    url: '/api/blog',
+    method: 'post',
+    data: blogInfo
+  });
+}
