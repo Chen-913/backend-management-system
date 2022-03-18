@@ -19,7 +19,11 @@
       <el-table-column prop="description" label="文章描述" align="center" width="250" />
       <el-table-column prop="scanNumber" label="浏览数" width="90" align="center" />
       <el-table-column prop="commentNumber" label="评论量" width="90" align="center" />
-      <el-table-column prop="category.name" label="所属分类" width="90" align="center" />
+      <el-table-column label="所属分类" width="90" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.category==null?"未分类":scope.row.category.name }}
+        </template>
+      </el-table-column>
       <el-table-column prop="createDate" label="创建日期" min-width="220" align="center">
         <template slot-scope="scope">
           {{ formatDate(scope.row.createDate) }}
