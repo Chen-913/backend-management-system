@@ -14,3 +14,39 @@ export function formatDate(timestamp) {
   const seconds = timeObj.getSeconds().toString().padStart(2, '0');
   return `${year}-${month}-${day} ${hour}:${minutes}:${seconds} ${week}`;
 }
+
+/**
+ * 函数防抖
+ * @param {Function} func
+ * @param {Number} delay
+ * @returns
+ */
+export function debounce(func, delay = 300) {
+  let timer = null;
+  return function (...args) {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+}
+
+/**
+ * 函数节流
+ * @param {Function} func
+ * @param {Number} delay
+ * @returns
+ */
+export function throttle(func, delay = 300) {
+  let timer = null;
+  return function (...args) {
+    if (!timer) {
+      timer = setTimeout(() => {
+        func.apply(this, args);
+        timer = null;
+      }, delay);
+    }
+  };
+}
