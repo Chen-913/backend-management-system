@@ -238,7 +238,7 @@ export default {
 </script>
 
 <style scoped>
-@import url("//at.alicdn.com/t/font_3260077_9p9wff8drw.css");
+@import url("//at.alicdn.com/t/font_3260077_hmu81br9rjo.css");
 .projectName:hover{
 	color: rgb(66, 199, 199);
 }
