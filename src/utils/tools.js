@@ -43,8 +43,8 @@ export function throttle(func, delay = 300) {
   let timer = null;
   return function (...args) {
     if (!timer) {
+      func.apply(this, args);
       timer = setTimeout(() => {
-        func.apply(this, args);
         timer = null;
       }, delay);
     }
