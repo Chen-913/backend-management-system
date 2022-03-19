@@ -8,7 +8,7 @@
       :on-success="handleAvatarSuccess"
       :headers="headers"
     >
-      <img v-if="value.length!=0" :src="imgURL" class="avatar">
+      <img v-if="value.length!=0" :src="imgURL" :style="{width:diyWidth, height:diyHeight}" class="avatar">
       <i v-else class="el-icon-plus avatar-uploader-icon" />
     </el-upload>
   </div>
@@ -26,6 +26,19 @@ export default {
     value: {
       type: String,
       default: ''
+    },
+    diyWidth: {
+      type: String,
+      default: '250px'
+    },
+    diyHeight: {
+      type: String,
+      default: '178px'
+    },
+    // 给外部提供上传成功后的回调函数
+    afterSuccess: {
+      type: Function,
+      default: (res) => {}
     }
   },
   computed: {
@@ -41,6 +54,7 @@ export default {
   methods: {
     handleAvatarSuccess(res) {
       this.$emit('input', res.data);
+      this.afterSuccess(res);
     }
   }
 };
@@ -67,8 +81,6 @@ export default {
     text-align: center;
   }
   .avatar {
-    width: 250px;
-    height: 178px;
     display: block;
   }
 </style>
