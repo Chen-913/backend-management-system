@@ -187,6 +187,20 @@ export const constantRoutes = [
       }
     ]
   },
+  // 个人中心
+  {
+    path: '/personal-center',
+    component: Layout,
+    children: [
+      {
+        path: '/personal-center',
+        name: 'PersonalCenter',
+        hidden: true,
+        component: () => import('@/views/personal-center/index.vue'),
+        meta: { title: '个人中心', auth: true }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: { name: '404' }, hidden: true }
 ];

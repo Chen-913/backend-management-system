@@ -1,4 +1,4 @@
-import { login, logout, whoAmI } from '@/api/user';
+import { login, whoAmI } from '@/api/user';
 import { removeToken } from '@/utils/auth';
 import { resetRouter } from '@/router';
 
@@ -77,16 +77,13 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token)
-        .then(() => {
-          removeToken(); // must remove  token  first
-          resetRouter();
-          commit('RESET_STATE');
-          resolve();
-        })
-        .catch((error) => {
-          reject(error);
-        });
+      // must remove  token  first
+      removeToken();
+      // 重置路由
+      resetRouter();
+      // 重置本地的用户信息
+      commit('RESET_STATE');
+      resolve();
     });
   }
 

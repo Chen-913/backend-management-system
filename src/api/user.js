@@ -26,3 +26,16 @@ export function logout() {
     method: 'post'
   });
 }
+
+/**
+ * 更新用户信息
+ * @param {Object} userInfo 用户信息
+ * @returns
+ */
+export function updateUser(userInfo) {
+  return request({
+    url: '/api/admin',
+    method: 'put',
+    data: userInfo
+  });
+}
