@@ -43,7 +43,7 @@
         <template slot="title">
           <i class="el-icon-user-solid" />网站头像信息
         </template>
-        <Upload v-model="avatar" />
+        <Upload v-model="avatar" :after-success="handleAfterSuccess" diy-width="150px" diy-height="150px" />
       </el-collapse-item>
       <el-collapse-item title="网址图标信息" name="faviconInfo">
         <template slot="title">
@@ -114,11 +114,7 @@
             <el-input v-model.trim="qqInfo.qq" type="text" />
           </el-form-item>
           <el-form-item label="二维码预览" prop="qqQrCode">
-            <el-image
-              style="width: 100px;height: 100px;"
-              :src="serverInfo.serverURL+qqInfo.qqQrCode"
-              fit="fill"
-            />
+            <Upload v-model="qqInfo.qqQrCode" :after-success="handleAfterSuccess" diy-width="100px" diy-height="100px" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm('qqInfo', qqInfo)">提交</el-button>
@@ -140,11 +136,7 @@
             <el-input v-model.trim="weixinInfo.weixin" type="text" />
           </el-form-item>
           <el-form-item label="二维码预览" prop="weixinQrCode">
-            <el-image
-              style="width: 100px;height: 100px;"
-              :src="serverInfo.serverURL+weixinInfo.weixinQrCode"
-              fit="fill"
-            />
+            <Upload v-model="weixinInfo.weixinQrCode" :after-success="handleAfterSuccess" diy-width="100px" diy-height="100px" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm('weixinInfo', weixinInfo)">提交</el-button>
@@ -257,7 +249,24 @@ export default {
           return false;
         }
       });
-    }, 2000)
+    }, 2000),
+    handleAfterSuccess(res) {
+      // 在图片上传成功后的回调函数
+      const avatar = res.data;
+      modifySetting({ avatar }).then(r => {
+        if (r.code === 0) {
+          this.$message.success('修改成功');
+        } else {
+          if (typeof r === 'string') {
+            r = JSON.parse(r);
+          }
+          this.$message.error('错误:' + r.msg);
+        }
+      }).catch(e => {
+        console.log(e);
+        this.$message('错误:' + e);
+      });
+    }
   }
 };
 </script>
